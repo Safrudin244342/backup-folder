@@ -41,6 +41,7 @@ multi folder
 action disini akan di eksekusi sesuai sintax yang digunakan
 
 ```start```, berarti aksi akan dijalankan sebelum backup folder dilakukan
+
 ```end```, berarti aksi akan dijalankan sesudah backup folder selesai
 
 **standart penulisan**

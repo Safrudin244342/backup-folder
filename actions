@@ -1,4 +1,4 @@
 start pm2 stop all
 start systemctl stop nginx
 end pm2 start all
-start systemctl start nginx
+end systemctl start nginx
