@@ -114,10 +114,10 @@ function execAction {
   then 
     for ((i=0; i < ${#listAction[@]}; i++))
     do
-      echo ${listAction[$i]}
+      eval ${listAction[$i]}
     done
   else
-    echo ${listAction[0]}
+    eval ${listAction[0]}
   fi
 }
 
