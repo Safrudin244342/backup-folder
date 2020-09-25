@@ -22,7 +22,7 @@ untuk contoh file config seperti ```backupList```
 folder-yang-akan-dikompres>folder-tujuan
 ```
 
-menggunakan pemisah ```>```, dan pastikan terdapat baris kosong di akhir baris
+menggunakan pemisah ```>```, dan pastikan terdapat baris kosong di akhir file
 
 **menambahkan action**
 
