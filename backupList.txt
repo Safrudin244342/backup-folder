@@ -1,1 +1,1 @@
-/usr/project/js/angkringanhits-api/log /usr/backup/$(date +'%m-%d-%y').tar.gz
+/usr/project/js/angkringanhits-api/log>/usr/backup/$(date +'%m-%d-%y').tar.gz
