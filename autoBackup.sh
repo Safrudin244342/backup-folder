@@ -5,7 +5,8 @@
 IFS=' '
 read -a args <<< $@
 
-files=()
+pathsFrom=()
+pathsTo=()
 
 function readFile {
   filename=$1
@@ -13,10 +14,8 @@ function readFile {
   do
     IFS='>'
     read -a paths <<< "$line"
-    for path in "${paths[@]}"
-    do
-      echo $path
-    done
+    pathsFrom[${#pathsFrom[@]}]=${paths[0]}
+    pathsTo[${#pathsTo[@]}]=${paths[1]}
   done < "$filename"
 }
 
@@ -26,7 +25,7 @@ function compressFolder {
 
   if [ ${#pathFrom} != 0 ] && [ ${#pathTo} != 0 ] 
   then
-    tar -zcf "$pathTo" -C "$pathFrom" .
+    tar -zcf "$pathTo/$(date +%m-%d-%y).tar.gz" -C "$pathFrom" .
   else
     echo "error"
   fi
@@ -35,10 +34,15 @@ function compressFolder {
 function start {
   if [ "${args[0]}" = "-s" ]
   then
-    compressFolder ${args[1]} ${args[2]}
+    compressFolder ${args[1]} "${args[2]}"
   elif [ "${args[0]}" = "-m" ]
   then
-    echo "multi operation"
+    readFile ${args[1]}
+    for (( i=0; i < ${#pathsFrom[@]}; i++ ))
+    do
+      compressFolder "${pathsFrom[$i]}" "${pathsTo[$i]}"
+      echo "task $i from ${#pathsFrom[@]} done"
+    done
   else
     echo "error"
   fi
