@@ -26,8 +26,6 @@ function compressFolder {
   if [ ${#pathFrom} != 0 ] && [ ${#pathTo} != 0 ] 
   then
     tar -zcf "$pathTo/$(date +%m-%d-%y).tar.gz" -C "$pathFrom" .
-  else
-    echo "error"
   fi
 }
 
@@ -41,10 +39,7 @@ function start {
     for (( i=0; i < ${#pathsFrom[@]}; i++ ))
     do
       compressFolder "${pathsFrom[$i]}" "${pathsTo[$i]}"
-      echo "task $i from ${#pathsFrom[@]} done"
     done
-  else
-    echo "error"
   fi
 }
 
