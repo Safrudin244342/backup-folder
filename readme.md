@@ -1,11 +1,13 @@
 # Shell Script for backup folder to *.tar.zip
 
+***Hanya diijinkan memasukan folder, baik yang akan dikompress maupun tujuan kompress***
+
 ***how to use***
 
 **singel folder**
 
 ```
-./backupFolder.sh -s folder-tujuan folder-yang-akan-dikompres
+./backupFolder.sh -s folder-yang-akan-dicompress folder-tujuan
 ```
 
 **multi folder**
@@ -40,9 +42,9 @@ multi folder
 
 action disini akan di eksekusi sesuai sintax yang digunakan
 
-```start```, berarti aksi akan dijalankan sebelum backup folder dilakukan
+```start``` berarti aksi akan dijalankan sebelum backup folder dilakukan
 
-```end```, berarti aksi akan dijalankan sesudah backup folder selesai
+```end``` berarti aksi akan dijalankan sesudah backup folder selesai
 
 **standart penulisan**
 
