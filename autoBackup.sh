@@ -1,14 +1,39 @@
 #!/bin/bash
 
-# tar -zcf 123.tar.gz -C /usr/log/backend . -C /usr/log/nginx .
-# args
+# panduan
+
+# kompres singel folder autoBackup -s folder-tujuan fordel-kompress
+# kompres multi folder autoBackup -m file-conf
+
+# file-conf
+# folder-tujuan>folder-kompres
+
+# pastikan ada satu baris kosong paling bawah
+
 IFS=' '
 read -a args <<< $@
 
 pathsFrom=()
 pathsTo=()
 
-function readFile {
+startActions=()
+mainActions=()
+endAction=()
+
+function arrayJoin {
+  newCmd=""
+
+  IFS=' '
+  read -a arrayCmd <<< $cmd
+  for ((i=1; i < ${#arrayCmd[@]}; i++))
+  do
+    newCmd="$newCmd ${arrayCmd[$i]}"
+  done
+
+  cmd=$newCmd
+}
+
+function readConfig {
   filename=$1
   while IFS= read -r line
   do
@@ -29,17 +54,101 @@ function compressFolder {
   fi
 }
 
+function makeListAction {
+  filename=$1
+
+  while IFS= read -r line
+  do
+    IFS=' '
+    read -a subAction <<< "$line"
+    cmd=${line[@]}
+    arrayJoin
+    if [ "${subAction[0]}" = "start" ]
+    then
+      startActions[${#startActions[@]}]=$cmd
+    elif [ "${subAction[0]}" = "end" ]
+    then
+      endActions[${#endActions[@]}]=$cmd
+    fi
+  done < $filename
+}
+
+function execAction {
+  listAction=()
+
+  # add start action
+  if [ ${#startActions[@]} != 1 ]
+  then 
+    for ((i=0; i < ${#startActions[@]}; i++))
+    do
+      listAction[${#listAction[@]}]=${startActions[$i]}
+    done
+  else
+    listAction[${#listAction[@]}]=${startActions[0]}
+  fi
+
+  # add main action
+  if [ ${#mainActions[@]} != 1 ]
+  then 
+    for ((i=0; i < ${#mainActions[@]}; i++))
+    do
+      listAction[${#listAction[@]}]=${mainActions[$i]}
+    done
+  else
+    listAction[${#listAction[@]}]=${mainActions[0]}
+  fi
+
+  # add end action
+  if [ ${#endActions[@]} != 1 ]
+  then 
+    for ((i=0; i < ${#endActions[@]}; i++))
+    do
+      listAction[${#listAction[@]}]=${endActions[$i]}
+    done
+  else
+    listAction[${#listAction[@]}]=${endActions[0]}
+  fi
+
+  # exec all action
+  if [ ${#listAction[@]} != 1 ]
+  then 
+    for ((i=0; i < ${#listAction[@]}; i++))
+    do
+      echo ${listAction[$i]}
+    done
+  else
+    echo ${listAction[0]}
+  fi
+}
+
 function start {
   if [ "${args[0]}" = "-s" ]
   then
-    compressFolder ${args[1]} "${args[2]}"
+    cmd="compressFolder ${args[1]} ${args[2]}"
+    mainActions[${#mainActions[@]}]=$cmd
+    
+    if [ "${args[3]}" = "-a" ] 
+    then 
+      makeListAction ${args[4]}
+    fi
+
+    execAction
   elif [ "${args[0]}" = "-m" ]
   then
-    readFile ${args[1]}
+    readConfig ${args[1]}
+    
     for (( i=0; i < ${#pathsFrom[@]}; i++ ))
     do
-      compressFolder "${pathsFrom[$i]}" "${pathsTo[$i]}"
+      cmd="compressFolder ${pathsFrom[$i]} ${pathsTo[$i]}"
+      mainActions[${#mainActions[@]}]=$cmd
     done
+    
+    if [ "${args[2]}" = "-a" ] 
+    then 
+      makeListAction ${args[3]}
+    fi
+
+    execAction
   fi
 }
 

@@ -1,0 +1,4 @@
+start pm2 stop
+start systemctal stop nginx
+end pm2 start
+end systemctal start nginx
