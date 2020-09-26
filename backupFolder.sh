@@ -47,8 +47,6 @@ function fileMapping {
 }
 
 function removeFile {
-  fileMapping
-  
   for ((i=0; i < ${#files[@]}; i++)); do
     rm ${files[$i]}
   done
@@ -68,6 +66,8 @@ function readConfig {
 function compressFolder {
   pathFrom=$1
   pathTo=$2
+
+  fileMapping $pathFrom
 
   if [ ${#pathFrom} != 0 ] && [ ${#pathTo} != 0 ] 
   then
