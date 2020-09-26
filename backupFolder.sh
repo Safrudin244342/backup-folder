@@ -33,6 +33,17 @@ function arrayJoin {
   cmd=$newCmd
 }
 
+function fileMapping {
+  baseDirectory=$1
+  for file in $baseDirectory/*; do
+    if [ -d "$file" ]; then
+      fileMapping $file
+    else
+      echo $file
+    fi
+  done
+}
+
 function readConfig {
   filename=$1
   while IFS= read -r line
