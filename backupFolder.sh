@@ -39,8 +39,9 @@ function fileMapping {
   baseDirectory=$1
   for file in $baseDirectory/*; do
     if [ -d "$file" ]; then
+      echo "folder = $file"
       fileMapping $file
-    else
+    elif [ -f "$file" ]; then
       files[${#files[@]}]=$file
     fi
   done
