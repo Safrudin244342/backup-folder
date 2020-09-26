@@ -20,6 +20,8 @@ startActions=()
 mainActions=()
 endAction=()
 
+files=()
+
 function arrayJoin {
   newCmd=""
 
@@ -39,8 +41,16 @@ function fileMapping {
     if [ -d "$file" ]; then
       fileMapping $file
     else
-      echo $file
+      files[${#files[@]}]=$file
     fi
+  done
+}
+
+function removeFile {
+  fileMapping
+  
+  for ((i=0; i < ${#files[@]}; i++)); do
+    rm ${files[$i]}
   done
 }
 
