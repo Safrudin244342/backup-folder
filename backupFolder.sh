@@ -39,7 +39,6 @@ function fileMapping {
   baseDirectory=$1
   for file in $baseDirectory/*; do
     if [ -d "$file" ]; then
-      echo "folder = $file"
       fileMapping $file
     elif [ -f "$file" ]; then
       files[${#files[@]}]=$file
@@ -49,7 +48,9 @@ function fileMapping {
 
 function removeFile {
   for ((i=0; i < ${#files[@]}; i++)); do
-    rm ${files[$i]}
+    if [ -f "${files[$i]}" ]; then
+      rm ${files[$i]}
+    fi
   done
 }
 
@@ -134,9 +135,10 @@ function execAction {
   # exec all action
   if [ ${#listAction[@]} != 1 ]
   then 
-    for ((i=0; i < ${#listAction[@]}; i++))
-    do
+    for ((i=0; i < ${#listAction[@]}; i++)); do
+      delete="${listAction[$i]}"
       eval ${listAction[$i]}
+      listAction=( "${listAction[@]/$delete}" )
     done
   else
     eval ${listAction[0]}
