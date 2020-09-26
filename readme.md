@@ -24,7 +24,7 @@ untuk contoh file config seperti ```backupList```
 folder-yang-akan-dikompres>folder-tujuan
 ```
 
-menggunakan pemisah ```>```, dan pastikan terdapat baris kosong di akhir file
+menggunakan pemisah ```>``` dan pastikan terdapat baris kosong di akhir file
 
 **menambahkan action**
 
@@ -54,4 +54,7 @@ sintax command
 example
 start pm2 stop all
 end pm2 start all
+
+command bawaan
+removeFile > menghapus file yang sudah dicompress
 ```
