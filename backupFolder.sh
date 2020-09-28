@@ -71,9 +71,23 @@ function compressFolder {
 
   fileMapping $pathFrom
 
+  IFS='/'
+  subPath="$pathFrom"
+  read -a folders <<< "$subPath"
+  folder=${folders[${#folders[@]}-1]}
+  IFS=' '
+
+  newPath=""
+
+  subPath=( "${subPath[@]/$folder}" )
+
+  for new in ${subPath[@]}; do
+    newPath="/$new"
+  done
+
   if [ ${#pathFrom} != 0 ] && [ ${#pathTo} != 0 ] 
   then
-    tar -zcf "$pathTo/$(date +%m-%d-%y).tar.gz" -C "$pathFrom" .
+    tar -C $newPath -cf $pathTo/$(date +%m-%d-%y).tar.gz $folder/
   fi
 }
 
@@ -161,16 +175,16 @@ function start {
   then
     readConfig ${args[1]}
     
+    if [ "${args[2]}" = "-a" ] 
+    then 
+      makeListAction ${args[3]}
+    fi
+
     for (( i=0; i < ${#pathsFrom[@]}; i++ ))
     do
       cmd="compressFolder ${pathsFrom[$i]} ${pathsTo[$i]}"
       mainActions[${#mainActions[@]}]=$cmd
     done
-    
-    if [ "${args[2]}" = "-a" ] 
-    then 
-      makeListAction ${args[3]}
-    fi
 
     execAction
   fi
